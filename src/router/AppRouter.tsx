@@ -4,15 +4,16 @@ import { Route, Routes } from 'react-router-dom'
 import { Page } from '@/page'
 import { Layout } from '@/layout'
 import { PrivateRoute } from '@/component/hoc/PrivateRoute'
+import { Context } from '@/context'
 
 // import { EntityType } from '@/type/list'
 
 export const AppRouter: FunctionComponent = () => {
     return (
-        <Routes>
+    <Routes>
             <Route element={<Layout.App/>}>
                 <Route element={<PrivateRoute/>}>
-                    <Route element={<Layout.Home/>}>
+                    <Route element={<Context.Notes.Provider><Layout.Home/></Context.Notes.Provider>}>
                         <Route index element={<Page.Home/>}/>
                     </Route>
                     {/*<Route path="characters" element={<Layout.List h1="Characters"/>}>*/}
@@ -29,7 +30,7 @@ export const AppRouter: FunctionComponent = () => {
                     {/*</Route>*/}
                     <Route path="*" element={<Page.NotFound/>}/>
                 </Route>
-                <Route path="signin" element={<Page.SignIn/>}/>
+                <Route path={PagesList.signIn} element={<Page.SignIn/>}/>
             </Route>
         </Routes>
     )

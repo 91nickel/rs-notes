@@ -5,23 +5,21 @@ import { Context } from '@/context'
 import { AppRouter } from '@/router/AppRouter.tsx'
 
 import '@mantine/core/styles.css'
-import '@mantine/notifications/styles.css';
+import '@mantine/notifications/styles.css'
 import '@/style/index.scss'
-import "easymde/dist/easymde.min.css"
+import 'easymde/dist/easymde.min.css'
 
 function App() {
     return (
         <MantineProvider>
             <Notifications/>
-            <BrowserRouter>
-                <Context.App.Provider>
-                    <Context.Auth.Provider>
-                        <Context.Notes.Provider>
+            <Context.App.Provider>
+                <Context.Auth.Provider>
+                        <BrowserRouter>
                             <AppRouter/>
-                        </Context.Notes.Provider>
-                    </Context.Auth.Provider>
-                </Context.App.Provider>
-            </BrowserRouter>
+                        </BrowserRouter>
+                </Context.Auth.Provider>
+            </Context.App.Provider>
         </MantineProvider>
     )
 }
