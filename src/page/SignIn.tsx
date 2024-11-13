@@ -7,12 +7,12 @@ import ErrorBoundary from '@/component/hoc/ErrorBoundary'
 import SignInForm, { IFormValues } from '@/component/auth/SignInForm'
 
 const SignInPage: FunctionComponent = () => {
-    const auth = useAuth()
+    const {signIn, error} = useAuth()
     const navigate = useNavigate()
     const location = useLocation()
 
     function handleSubmit(authData: IFormValues) {
-        auth.signIn(authData, () => {
+        signIn(authData, () => {
             navigate(location.state?.from || '/', {replace: true})
         })
     }
@@ -20,11 +20,11 @@ const SignInPage: FunctionComponent = () => {
     return (
         <Container>
             <Center>
-                <h1>Auth</h1>
+                <h1>Авторизация</h1>
             </Center>
             <Center>
                 <ErrorBoundary>
-                    <SignInForm onSubmit={handleSubmit}/>
+                    <SignInForm error={error} onSubmit={handleSubmit}/>
                 </ErrorBoundary>
             </Center>
         </Container>

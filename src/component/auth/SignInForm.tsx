@@ -1,4 +1,4 @@
-import { Box, Button, PasswordInput, TextInput } from '@mantine/core'
+import { Box, Button, PasswordInput, TextInput, Alert } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { FormEvent } from 'react'
 
@@ -12,10 +12,11 @@ export type IFormValues = {
 };
 
 interface IProps {
+    error: string
     onSubmit: Function
 }
 
-const SignInForm = ({onSubmit}: IProps) => {
+const SignInForm = ({error, onSubmit}: IProps) => {
 
     const initialValues = {
         [FieldNames.login]: '',
@@ -48,7 +49,7 @@ const SignInForm = ({onSubmit}: IProps) => {
 
     function handleSubmit(event: React.FormEvent) {
         event.preventDefault()
-        console.log(form.values)
+        // console.log(form.values)
         if (!form.validate().hasErrors) {
             onSubmit(form.values)
         }
@@ -60,6 +61,11 @@ const SignInForm = ({onSubmit}: IProps) => {
             onSubmit={handleSubmit}
             w={{base: 320, sm: 400, lg: 500}}
         >
+            {
+                error
+                &&
+                <Alert color="red">{error}</Alert>
+            }
             <TextInput
                 mb="md"
                 label="Логин"
