@@ -6,11 +6,18 @@ const NOTES_LOCAL_STORAGE_KEY = 'notes'
 
 interface INoteService {
     cachedList: string
-    toRaw: (note: INote) => INoteRaw
-    fromRaw: (note: INoteRaw) => INote
-    save: (data: INote[]) => Promise<void> | void
-    // load: () => Promise<INote[]>
-    onDBChanged: (cb: (list: INote[]) => void) => void
+
+    toRaw(note: INote): INoteRaw
+
+    fromRaw(note: INoteRaw): INote
+
+    listFromJson(listJsonString: string): INote[]
+
+    save(data: INote[]): Promise<void> | void
+
+    // load(): Promise<INote[]>
+
+    onDBChanged(cb: (list: INote[]) => void): void
 }
 
 class NoteService implements INoteService {
@@ -30,6 +37,16 @@ class NoteService implements INoteService {
             ...noteRaw,
             createdAt: new Date(noteRaw.createdAt),
             updatedAt: new Date(noteRaw.updatedAt),
+        }
+    }
+
+    listFromJson(listJsonString: string): INote[] {
+        try {
+            const rawList: INoteRaw[] = JSON.parse(listJsonString)
+            return rawList.map(this.fromRaw)
+        } catch (e: any) {
+            console.error('load(): Something went wrong on load', e.message)
+            return [] as INote[]
         }
     }
 
@@ -77,40 +94,43 @@ class NoteService implements INoteService {
         })
     }
 
-    load(): Promise<INote[]> {
-        // let error: FIREBASE_SERVICE_ERRORS
+    // load(): Promise<INote[]> {
+    //     // let error: FIREBASE_SERVICE_ERRORS
+    //
+    //     return Promise.all([
+    //         this.loadFromLocalStorage(),
+    //         // this.loadFromDB(),
+    //     ]).then(([lsData]): INote[] => {
+    //         const listJsonString = this.cachedList = lsData
+    //
+    //         // if (lsData !== dbData) {
+    //         //     console.log('Conflict!!!', lsData, dbData)
+    //         //     this.saveToDB(listJsonString)
+    //         // }
+    //
+    //         try {
+    //             const rawList: INoteRaw[] = JSON.parse(listJsonString)
+    //             return rawList.map(this.fromRaw)
+    //         } catch (e: any) {
+    //             console.error('load(): Something went wrong on load', e.message)
+    //             return []
+    //         }
+    //     })
+    // }
 
-        return Promise.all([
-            this.loadFromLocalStorage(),
-            // this.loadFromDB(),
-        ]).then(([lsData]): INote[] => {
-            const listJsonString = this.cachedList = lsData
-
-            // if (lsData !== dbData) {
-            //     console.log('Conflict!!!', lsData, dbData)
-            //     this.saveToDB(listJsonString)
-            // }
-
-            try {
-                const rawList: INoteRaw[] = JSON.parse(listJsonString)
-                return rawList.map(this.fromRaw)
-            } catch (e: any) {
-                console.error('load(): Something went wrong on load', e.message)
-                return []
-            }
-        })
-    }
-
-    loadFromDB(): Promise<string> {
+    loadFromDB(): Promise<INote[]> {
         return FirebaseService.getNotes()
-            .then(listJsonString => listJsonString || '[]')
+            .then(dbData => {
+                this.cachedList = dbData || '[]'
+                return this.listFromJson(this.cachedList)
+            })
     }
 
-    loadFromLocalStorage(): Promise<string> {
-        return new Promise((res) => {
-            return res(localStorage.getItem(NOTES_LOCAL_STORAGE_KEY) || '[]')
-        })
+    loadFromLocalStorage(): Promise<INote[]> {
+        this.cachedList = localStorage.getItem(NOTES_LOCAL_STORAGE_KEY) || '[]'
+        return Promise.resolve(this.listFromJson(this.cachedList))
     }
+
 
 }
 

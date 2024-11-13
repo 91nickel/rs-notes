@@ -5,6 +5,7 @@ import { INote, INoteUserFields } from '@/type/note'
 import _ from 'lodash'
 import { LayoutProps } from '@/type/layout.ts'
 import { FirebaseService } from '@/service/firebase.service.ts'
+
 // import { FirebaseService } from '@/service/firebase.service.ts'
 
 interface INotesContext {
@@ -44,34 +45,40 @@ const NotesProvider: FunctionComponent<LayoutProps> = ({children}) => {
         console.log('initFromLocal')
         if (!isInitiated && !FirebaseService.connected) {
             // console.log('initFromLocal.isInitiated === false')
-            NoteService.load()
-                .then((list: INote[]) => {
-                    console.log('DB from local', list)
-                    handleDataFromStorage(list, true)
+            NoteService.loadFromLocalStorage()
+                .then((notes: INote[]) => {
+                    // console.log('DB from local', notes)
+                    handleDataFromStorage(notes)
+                    setIsLoading(false)
+                    setIsInitiated(true)
+                    saveNotesList()
                 })
         }
     }, 2000)
 
     useEffect(() => {
-        console.log('useEffect')
-        NoteService.onDBChanged((list: INote[]) => {
-            console.log('DB changed', list)
+        // console.log('useEffect')
+        NoteService.loadFromDB().then(list => {
             handleDataFromStorage(list)
+            setIsLoading(false)
+            setIsInitiated(true)
         })
+        // NoteService.onDBChanged(list => {
+        //     handleDataFromStorage(list)
+        //     setIsLoading(false)
+        // })
         initFromLocal()
     }, [])
 
-    function handleDataFromStorage (list: INote[], save = false) {
-        if (list.length) {
-            const notesSorted = _.orderBy(list, 'updatedAt', 'desc')
-            setList(notesSorted)
-            setCurrentNoteId(notesSorted[0].id)
+    function handleDataFromStorage(notes: INote[]) {
+        console.log('handleDataFromStorage')
+        if (notes.length) {
+            const notesSorted = _.orderBy(notes, 'updatedAt', 'desc')
+            if (!_.isEqual(list, notesSorted)) {
+                setList(notesSorted)
+                setCurrentNoteId(notesSorted[0].id)
+            }
         }
-        setIsLoading(false)
-        if (!isInitiated)
-            setIsInitiated(true)
-        if (save)
-            saveNotesList()
     }
 
     function handleChange(dto: Partial<INoteUserFields>) {

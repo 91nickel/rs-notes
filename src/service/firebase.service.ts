@@ -152,9 +152,9 @@ class FirebaseService implements IFirebaseService {
                 return rej(FIREBASE_SERVICE_ERRORS.UNAUTHORIZED)
             }
 
-            if (!this.connected) {
-                return rej(FIREBASE_SERVICE_ERRORS.DISCONNECTED)
-            }
+            // if (!this.connected) {
+            //     return rej(FIREBASE_SERVICE_ERRORS.DISCONNECTED)
+            // }
 
             if (this.notes) {
                 return res(this.notes)
