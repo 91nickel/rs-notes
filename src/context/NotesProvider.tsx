@@ -47,7 +47,7 @@ const NotesProvider: FunctionComponent<LayoutProps> = ({children}) => {
             NoteService.load()
                 .then((list: INote[]) => {
                     // console.log('DB from local', list)
-                    handleDataFromStorage(list)
+                    handleDataFromStorage(list, true)
                 })
         }
     }, 2000)
@@ -60,7 +60,7 @@ const NotesProvider: FunctionComponent<LayoutProps> = ({children}) => {
         initFromLocal()
     }, [])
 
-    function handleDataFromStorage (list: INote[]) {
+    function handleDataFromStorage (list: INote[], save = false) {
         if (list.length) {
             const notesSorted = _.orderBy(list, 'updatedAt', 'desc')
             setList(notesSorted)
@@ -69,6 +69,8 @@ const NotesProvider: FunctionComponent<LayoutProps> = ({children}) => {
         setIsLoading(false)
         if (!isInitiated)
             setIsInitiated(true)
+        if (save)
+            saveNotesList()
     }
 
     function handleChange(dto: Partial<INoteUserFields>) {
