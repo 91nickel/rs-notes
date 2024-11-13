@@ -42,8 +42,8 @@ const NotesProvider: FunctionComponent<LayoutProps> = ({children}) => {
     }, 500)
 
     const initFromLocal = useDebounceCallback(() => {
-        console.log('initFromLocal')
         if (!isInitiated && !FirebaseService.connected) {
+            console.log('initFromLocal')
             // console.log('initFromLocal.isInitiated === false')
             NoteService.loadFromLocalStorage()
                 .then((notes: INote[]) => {
@@ -58,11 +58,16 @@ const NotesProvider: FunctionComponent<LayoutProps> = ({children}) => {
 
     useEffect(() => {
         // console.log('useEffect')
-        NoteService.loadFromDB().then(list => {
-            handleDataFromStorage(list)
-            setIsLoading(false)
-            setIsInitiated(true)
-        })
+        NoteService.loadFromDB()
+            .then(list => {
+                console.log('loadedFromDb', list)
+                handleDataFromStorage(list)
+                setIsLoading(false)
+                setIsInitiated(true)
+            })
+            .catch(e => {
+                console.log(e)
+            })
         // NoteService.onDBChanged(list => {
         //     handleDataFromStorage(list)
         //     setIsLoading(false)
