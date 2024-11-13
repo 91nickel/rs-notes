@@ -27,6 +27,7 @@ const AuthProvider: FunctionComponent<LayoutProps> = ({children}) => {
         })
 
         FirebaseService.onAuthStateChanged(user => {
+            console.log('onAuthStateChanged', user)
             setInitiated(true)
             if (user) {
                 // User is signed in, see docs for a list of available properties
