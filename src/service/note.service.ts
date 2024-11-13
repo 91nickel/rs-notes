@@ -64,6 +64,7 @@ class NoteService implements INoteService {
                 .then(() => this.saveToDB(listJsonString))
         } catch (e) {
             console.error('save(): Something went wrong on save', data)
+            return Promise.resolve()
         }
     }
 
