@@ -46,7 +46,7 @@ const NotesProvider: FunctionComponent<LayoutProps> = ({children}) => {
             // console.log('initFromLocal.isInitiated === false')
             NoteService.load()
                 .then((list: INote[]) => {
-                    // console.log('DB from local', list)
+                    console.log('DB from local', list)
                     handleDataFromStorage(list, true)
                 })
         }
@@ -54,7 +54,7 @@ const NotesProvider: FunctionComponent<LayoutProps> = ({children}) => {
 
     useEffect(() => {
         NoteService.onDBChanged((list: INote[]) => {
-            // console.log('DB changed', list)
+            console.log('DB changed', list)
             handleDataFromStorage(list)
         })
         initFromLocal()
