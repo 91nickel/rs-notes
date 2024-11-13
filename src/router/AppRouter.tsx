@@ -16,18 +16,6 @@ export const AppRouter: FunctionComponent = () => {
                     <Route element={<Context.Notes.Provider><Layout.Home/></Context.Notes.Provider>}>
                         <Route index element={<Page.Home/>}/>
                     </Route>
-                    {/*<Route path="characters" element={<Layout.List h1="Characters"/>}>*/}
-                    {/*    /!*<Route index element={<Page.List type={EntityType.character}/>}/>*!/*/}
-                    {/*    /!*<Route path=":id" element={<Page.Item type={EntityType.character}/>}/>*!/*/}
-                    {/*</Route>*/}
-                    {/*<Route path="locations" element={<Layout.List h1="Locations"/>}>*/}
-                    {/*    /!*<Route index element={<Page.List type={EntityType.location}/>}/>*!/*/}
-                    {/*    /!*<Route path=":id" element={<Page.Item type={EntityType.location}/>}/>*!/*/}
-                    {/*</Route>*/}
-                    {/*<Route path="episodes" element={<Layout.List h1="Episodes"/>}>*/}
-                    {/*    /!*<Route index element={<Page.List type={EntityType.episode}/>}/>*!/*/}
-                    {/*    /!*<Route path=":id" element={<Page.Item type={EntityType.episode}/>}/>*!/*/}
-                    {/*</Route>*/}
                     <Route path="*" element={<Page.NotFound/>}/>
                 </Route>
                 <Route path={PagesList.signIn} element={<Page.SignIn/>}/>

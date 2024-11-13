@@ -50,14 +50,14 @@ class NoteService implements INoteService {
         }
     }
 
-    save(data: INote[]): Promise<void> | void {
+    save(data: INote[]): Promise<void> {
         try {
             const rawList: INoteRaw[] = data.map(this.toRaw)
             const listJsonString = JSON.stringify(rawList)
 
             if (listJsonString === this.cachedList) {
                 // console.log('already saved')
-                return
+                return Promise.resolve()
             }
 
             return this.saveToLocalStorage(listJsonString)

@@ -39,6 +39,7 @@ const NotesProvider: FunctionComponent<LayoutProps> = ({children}) => {
     const saveNotesList = useDebounceCallback(() => {
         setIsLoading(true)
         NoteService.save(list)
+            .finally(() => setIsLoading(false))
     }, 500)
 
     const initFromLocal = useDebounceCallback(() => {
